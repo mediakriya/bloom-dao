@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloom DAO — Mekar Kesadaran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bloom-ink: #0e0e0e;
+    --bloom-paper: #f5f0e8;
+    --bloom-cream: #faf7f2;
+    --bloom-gold: #c9a84c;
+    --bloom-gold-light: #e8d5a3;
+    --bloom-gold-pale: #f5edda;
+    --bloom-sage: #4a6741;
+    --bloom-sage-light: #8aab85;
+    --bloom-sage-pale: #e8f0e6;
+    --bloom-indigo: #2d3561;
+    --bloom-indigo-light: #6b75a8;
+    --bloom-muted: #6b6560;
+    --bloom-border: rgba(14,14,14,0.12);
+    --bloom-border-strong: rgba(14,14,14,0.25);
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --nav-h: 64px;
+    --max-w: 1280px;
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-body);background:var(--bloom-cream);color:var(--bloom-ink);min-height:100vh;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+  /* LANGUAGE TOGGLE */
+  .lang-toggle{
+    display:flex;align-items:center;
+    border:1px solid var(--bloom-border);
+    border-radius:999px;overflow:hidden;
+    flex-shrink:0;
+  }
+  .lang-btn{
+    padding:0.3rem 0.7rem;font-family:var(--font-body);font-size:0.7rem;font-weight:700;
+    letter-spacing:0.1em;cursor:pointer;border:none;background:transparent;
+    color:var(--bloom-muted);transition:all 0.18s;
+  }
+  .lang-btn.active{background:var(--bloom-ink);color:var(--bloom-paper);}
+  /* Language visibility */
+  .lang-en{display:none}
+  .lang-id{display:block}
+  body.en .lang-en{display:block}
+  body.en .lang-id{display:none}
+  /* Inline spans */
+  span.lang-en{display:none}
+  span.lang-id{display:inline}
+  body.en span.lang-en{display:inline}
+  body.en span.lang-id{display:none}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(245,240,232,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--bloom-border);display:flex;align-items:center;padding:0 1.75rem;z-index:1000;gap:1.25rem;}
+  .nav-logo{font-family:var(--font-display);font-size:1.35rem;font-weight:600;color:var(--bloom-ink);white-space:nowrap;cursor:pointer;letter-spacing:0.02em;margin-right:0.5rem;}
+  .nav-logo span{color:var(--bloom-gold);}
+  .nav-links{display:flex;gap:0.15rem;flex:1;}
+  .nav-link{font-family:var(--font-body);font-size:0.75rem;font-weight:500;color:var(--bloom-muted);padding:0.4rem 0.75rem;border-radius:var(--r-sm);cursor:pointer;transition:all 0.2s;border:none;background:none;letter-spacing:0.07em;text-transform:uppercase;white-space:nowrap;}
+  .nav-link:hover{color:var(--bloom-ink);background:rgba(14,14,14,0.06);}
+  .nav-link.active{color:var(--bloom-ink);background:rgba(14,14,14,0.08);}
+  .nav-token{display:flex;align-items:center;gap:0.4rem;background:var(--bloom-gold-pale);border:1px solid var(--bloom-gold-light);border-radius:var(--r-sm);padding:0.32rem 0.7rem;font-size:0.75rem;font-weight:600;color:#7a5a1a;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+  .nav-token:hover{background:var(--bloom-gold-light);}
+  .nav-token .dot{width:6px;height:6px;border-radius:50%;background:var(--bloom-gold);}
+  .nav-cta{background:var(--bloom-ink);color:var(--bloom-paper);border:none;border-radius:var(--r-sm);padding:0.42rem 1rem;font-family:var(--font-body);font-size:0.75rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+  .nav-cta:hover{background:var(--bloom-indigo);}
+
+  /* PAGE SHELL */
+  .page{display:none;padding-top:var(--nav-h);min-height:100vh;}
+  .page.active{display:block;}
+  .container{max-width:var(--max-w);margin:0 auto;padding:0 2rem;}
+
+  /* BUTTONS */
+  .btn-primary{background:var(--bloom-ink);color:var(--bloom-paper);border:none;border-radius:var(--r-sm);padding:0.68rem 1.5rem;font-family:var(--font-body);font-size:0.8rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.22s;}
+  .btn-primary:hover{background:var(--bloom-indigo);transform:translateY(-1px);}
+  .btn-ghost{background:transparent;color:var(--bloom-ink);border:1px solid var(--bloom-border-strong);border-radius:var(--r-sm);padding:0.68rem 1.5rem;font-family:var(--font-body);font-size:0.8rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.22s;}
+  .btn-ghost:hover{border-color:var(--bloom-ink);transform:translateY(-1px);}
+
+  /* ===== LANDING ===== */
+  .hero{min-height:calc(100vh - var(--nav-h));display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:4rem 2rem 2rem;max-width:var(--max-w);margin:0 auto;}
+  .hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--bloom-sage-pale);border:1px solid var(--bloom-sage-light);border-radius:999px;padding:0.28rem 0.85rem;font-size:0.7rem;font-weight:600;color:var(--bloom-sage);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.5rem;}
+  .hero-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--bloom-sage-light);}
+  .hero-title{font-family:var(--font-display);font-size:clamp(2.8rem,4.5vw,4.2rem);font-weight:400;line-height:1.1;letter-spacing:-0.01em;margin-bottom:1.5rem;color:var(--bloom-ink);}
+  .hero-title em{color:var(--bloom-gold);font-style:italic;}
+  .hero-desc{font-size:0.97rem;color:var(--bloom-muted);line-height:1.85;max-width:500px;margin-bottom:2rem;}
+  .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+  .hero-visual{position:relative;display:flex;align-items:center;justify-content:center;}
+  .mandala{width:400px;height:400px;position:relative;display:flex;align-items:center;justify-content:center;}
+  .mandala-ring{position:absolute;border-radius:50%;border:1px solid;animation:spin 30s linear infinite;}
+  .mandala-ring:nth-child(1){width:100%;height:100%;border-color:rgba(201,168,76,0.15);}
+  .mandala-ring:nth-child(2){width:82%;height:82%;border-color:rgba(201,168,76,0.22);animation-direction:reverse;animation-duration:22s;}
+  .mandala-ring:nth-child(3){width:64%;height:64%;border-color:rgba(74,103,65,0.28);animation-duration:17s;}
+  .mandala-ring:nth-child(4){width:46%;height:46%;border-color:rgba(45,53,97,0.3);animation-direction:reverse;animation-duration:13s;}
+  .mandala-core{width:115px;height:115px;border-radius:50%;background:linear-gradient(135deg,var(--bloom-gold-pale),var(--bloom-gold-light));border:2px solid var(--bloom-gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2.4rem;font-weight:300;color:var(--bloom-gold);box-shadow:0 0 40px rgba(201,168,76,0.2);z-index:2;position:relative;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* STATS */
+  .stats-bar{padding:3rem 0;border-top:1px solid var(--bloom-border);border-bottom:1px solid var(--bloom-border);background:var(--bloom-paper);}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;}
+  .stat-item{text-align:center;}
+  .stat-num{font-family:var(--font-display);font-size:2.4rem;font-weight:400;color:var(--bloom-ink);}
+  .stat-label{font-size:0.78rem;color:var(--bloom-muted);letter-spacing:0.04em;margin-top:0.25rem;}
+
+  /* PILLARS */
+  .pillars{padding:5rem 0;background:var(--bloom-paper);}
+  .section-label{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--bloom-muted);margin-bottom:0.75rem;}
+  .section-title{font-family:var(--font-display);font-size:clamp(1.9rem,3vw,2.7rem);font-weight:400;line-height:1.2;margin-bottom:1rem;}
+  .section-desc{color:var(--bloom-muted);font-size:0.93rem;max-width:520px;}
+  .pillar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem;}
+  .pillar-card{background:var(--bloom-cream);border:1px solid var(--bloom-border);border-radius:var(--r-lg);padding:1.75rem 1.5rem;transition:all 0.25s;cursor:pointer;}
+  .pillar-card:hover{border-color:var(--bloom-border-strong);transform:translateY(-3px);box-shadow:0 8px 24px rgba(14,14,14,0.08);}
+  .pillar-icon{width:44px;height:44px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.25rem;border:1px solid;}
+  .pillar-icon.gold{background:var(--bloom-gold-pale);border-color:var(--bloom-gold-light);color:#7a5a1a;}
+  .pillar-icon.sage{background:var(--bloom-sage-pale);border-color:var(--bloom-sage-light);color:var(--bloom-sage);}
+  .pillar-icon.indigo{background:#e8eaf6;border-color:#c5cae9;color:var(--bloom-indigo);}
+  .pillar-icon.rose{background:#fce4ec;border-color:#f8bbd9;color:#880e4f;}
+  .pillar-name{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom-muted);margin-bottom:0.5rem;}
+  .pillar-title{font-family:var(--font-display);font-size:1.28rem;font-weight:500;margin-bottom:0.75rem;}
+  .pillar-desc{font-size:0.83rem;color:var(--bloom-muted);line-height:1.75;}
+
+  /* NARRATIVE */
+  .narrative{padding:6rem 0;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+  .narrative-quote{font-family:var(--font-display);font-size:1.9rem;font-weight:300;line-height:1.5;color:var(--bloom-ink);border-left:3px solid var(--bloom-gold);padding-left:1.5rem;}
+  .narrative-quote em{color:var(--bloom-gold);}
+  .narrative-text p{color:var(--bloom-muted);line-height:1.9;margin-bottom:1rem;font-size:0.93rem;}
+
+  /* TOKEN */
+  .token-section{padding:5rem 0;background:var(--bloom-ink);color:var(--bloom-paper);}
+  .token-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+  .token-title{font-family:var(--font-display);font-size:2.4rem;font-weight:400;line-height:1.2;margin-bottom:1rem;}
+  .token-desc{color:rgba(245,240,232,0.65);font-size:0.93rem;line-height:1.8;margin-bottom:2rem;}
+  .token-feats{display:flex;flex-direction:column;gap:1rem;}
+  .token-feat{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.25rem;border:1px solid rgba(245,240,232,0.12);border-radius:var(--r-md);background:rgba(245,240,232,0.04);}
+  .token-feat-icon{font-size:1.2rem;flex-shrink:0;margin-top:0.1rem;}
+  .token-feat-title{font-size:0.83rem;font-weight:600;margin-bottom:0.25rem;}
+  .token-feat-desc{font-size:0.8rem;color:rgba(245,240,232,0.55);line-height:1.6;}
+  .spirit-orb{width:280px;height:280px;border-radius:50%;background:conic-gradient(from 0deg,#c9a84c,#8aab85,#6b75a8,#c9a84c);opacity:0.9;display:flex;align-items:center;justify-content:center;margin:0 auto;position:relative;}
+  .spirit-orb::after{content:'SPIRIT';position:absolute;font-family:var(--font-body);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:rgba(245,240,232,0.7);background:var(--bloom-ink);width:130px;height:130px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(245,240,232,0.1);}
+
+  /* PAGE HEADERS */
+  .page-header{padding:3rem 0 2rem;border-bottom:1px solid var(--bloom-border);}
+  .page-header-inner{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+  .page-tag{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--bloom-muted);margin-bottom:0.5rem;}
+  .page-h1{font-family:var(--font-display);font-size:clamp(1.9rem,3.5vw,2.9rem);font-weight:400;line-height:1.15;}
+  .page-h1 em{color:var(--bloom-gold);font-style:italic;}
+  .filter-row{display:flex;gap:0.5rem;flex-wrap:wrap;padding:1.5rem 0;}
+  .filter-btn{padding:0.38rem 0.95rem;border-radius:999px;font-family:var(--font-body);font-size:0.75rem;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.18s;border:1px solid var(--bloom-border);background:transparent;color:var(--bloom-muted);}
+  .filter-btn.active,.filter-btn:hover{background:var(--bloom-ink);color:var(--bloom-paper);border-color:var(--bloom-ink);}
+
+  /* COURSE CARDS */
+  .course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;padding:1.5rem 0 4rem;}
+  .course-card{background:var(--bloom-paper);border:1px solid var(--bloom-border);border-radius:var(--r-lg);overflow:hidden;transition:all 0.25s;cursor:pointer;}
+  .course-card:hover{border-color:var(--bloom-border-strong);transform:translateY(-4px);box-shadow:0 12px 32px rgba(14,14,14,0.1);}
+  .course-thumb{height:156px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:3.2rem;font-weight:300;position:relative;overflow:hidden;}
+  .course-thumb.t1{background:linear-gradient(135deg,#f5edda,#e8d5a3);}
+  .course-thumb.t2{background:linear-gradient(135deg,#e8f0e6,#c5dbbf);}
+  .course-thumb.t3{background:linear-gradient(135deg,#e8eaf6,#c5cae9);}
+  .course-thumb.t4{background:linear-gradient(135deg,#fce4ec,#f8bbd9);}
+  .course-thumb.t5{background:linear-gradient(135deg,#e3f2fd,#bbdefb);}
+  .course-thumb.t6{background:linear-gradient(135deg,#f3e5f5,#e1bee7);}
+  .nft-badge{position:absolute;top:12px;right:12px;background:rgba(14,14,14,0.75);color:var(--bloom-paper);font-family:var(--font-mono);font-size:0.62rem;padding:0.22rem 0.55rem;border-radius:999px;backdrop-filter:blur(4px);}
+  .course-body{padding:1.2rem 1.4rem 1.4rem;}
+  .course-meta{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;}
+  .course-cat{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:999px;}
+  .cat-phil{background:var(--bloom-gold-pale);color:#7a5a1a;}
+  .cat-sci{background:var(--bloom-sage-pale);color:var(--bloom-sage);}
+  .cat-art{background:#f3e5f5;color:#6a1b9a;}
+  .cat-hist{background:#e3f2fd;color:#0d47a1;}
+  .course-level{font-size:0.7rem;color:var(--bloom-muted);}
+  .course-title{font-family:var(--font-display);font-size:1.2rem;font-weight:500;line-height:1.3;margin-bottom:0.5rem;}
+  .course-desc{font-size:0.8rem;color:var(--bloom-muted);line-height:1.7;margin-bottom:1.2rem;}
+  .course-footer{display:flex;align-items:center;justify-content:space-between;}
+  .course-price{font-size:0.8rem;font-weight:600;}
+  .price-spirit{color:var(--bloom-gold);}
+  .course-enroll{background:var(--bloom-ink);color:var(--bloom-paper);border:none;border-radius:var(--r-sm);padding:0.38rem 0.95rem;font-family:var(--font-body);font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+  .course-enroll:hover{background:var(--bloom-indigo);}
+
+  /* LEARN */
+  .learn-layout{display:grid;grid-template-columns:310px 1fr;height:calc(100vh - var(--nav-h));overflow:hidden;}
+  .learn-sidebar{border-right:1px solid var(--bloom-border);overflow-y:auto;background:var(--bloom-paper);padding:1.5rem;}
+  .learn-sidebar-title{font-family:var(--font-display);font-size:1.05rem;font-weight:500;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--bloom-border);}
+  .lesson-list{display:flex;flex-direction:column;gap:0.2rem;}
+  .lesson-item{display:flex;align-items:center;gap:0.7rem;padding:0.62rem 0.75rem;border-radius:var(--r-sm);cursor:pointer;transition:all 0.18s;font-size:0.8rem;color:var(--bloom-muted);}
+  .lesson-item:hover,.lesson-item.active{background:rgba(14,14,14,0.06);color:var(--bloom-ink);}
+  .lesson-item.done .lesson-num{background:var(--bloom-sage);color:white;}
+  .lesson-num{width:23px;height:23px;border-radius:50%;background:rgba(14,14,14,0.08);display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:600;flex-shrink:0;}
+  .learn-main{overflow-y:auto;display:flex;flex-direction:column;}
+  .learn-video{background:var(--bloom-ink);height:340px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .play-btn{width:60px;height:60px;border-radius:50%;border:2px solid rgba(245,240,232,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
+  .play-btn:hover{border-color:var(--bloom-gold);background:rgba(201,168,76,0.15);}
+  .learn-content{padding:2rem;flex:1;}
+  .learn-content-title{font-family:var(--font-display);font-size:1.55rem;font-weight:400;margin-bottom:1rem;}
+  .learn-content-body{font-size:0.88rem;color:var(--bloom-muted);line-height:1.9;margin-bottom:2rem;}
+
+  /* AI TUTOR */
+  .ai-tutor{border:1px solid var(--bloom-border);border-radius:var(--r-lg);overflow:hidden;margin-top:1.5rem;}
+  .ai-tutor-header{display:flex;align-items:center;gap:0.75rem;padding:0.9rem 1.2rem;background:var(--bloom-paper);border-bottom:1px solid var(--bloom-border);}
+  .ai-avatar{width:30px;height:30px;border-radius:50%;background:var(--bloom-gold-pale);border:1px solid var(--bloom-gold-light);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.95rem;color:var(--bloom-gold);}
+  .ai-label{font-size:0.8rem;font-weight:600;}
+  .ai-sub{font-size:0.7rem;color:var(--bloom-muted);}
+  .ai-messages{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0.7rem;max-height:210px;overflow-y:auto;}
+  .ai-msg{padding:0.7rem 0.95rem;border-radius:var(--r-md);font-size:0.8rem;line-height:1.7;max-width:82%;}
+  .ai-msg.bot{background:var(--bloom-gold-pale);color:var(--bloom-ink);border:1px solid var(--bloom-gold-light);align-self:flex-start;}
+  .ai-msg.user{background:var(--bloom-ink);color:var(--bloom-paper);align-self:flex-end;}
+  .ai-input-row{display:flex;gap:0.5rem;padding:0.9rem 1.2rem;border-top:1px solid var(--bloom-border);background:var(--bloom-cream);}
+  .ai-input{flex:1;border:1px solid var(--bloom-border);border-radius:var(--r-sm);padding:0.48rem 0.8rem;font-family:var(--font-body);font-size:0.8rem;background:var(--bloom-paper);color:var(--bloom-ink);outline:none;}
+  .ai-input:focus{border-color:var(--bloom-gold);}
+  .ai-send{background:var(--bloom-gold);color:white;border:none;border-radius:var(--r-sm);padding:0.48rem 0.95rem;font-family:var(--font-body);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+  .ai-send:hover{background:#b8922a;}
+
+  /* DASHBOARD */
+  .dashboard-grid{padding:2rem 0 4rem;display:grid;gap:2rem;}
+  .dash-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
+  .dash-card{background:var(--bloom-paper);border:1px solid var(--bloom-border);border-radius:var(--r-lg);padding:1.2rem 1.4rem;}
+  .dash-stat-label{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom-muted);margin-bottom:0.5rem;}
+  .dash-stat-val{font-family:var(--font-display);font-size:1.9rem;font-weight:400;}
+  .dash-stat-sub{font-size:0.72rem;color:var(--bloom-sage);margin-top:0.25rem;}
+  .progress-track{height:5px;background:rgba(14,14,14,0.08);border-radius:999px;overflow:hidden;margin-top:0.6rem;}
+  .progress-fill{height:100%;border-radius:999px;background:var(--bloom-gold);}
+  .my-courses-title{font-family:var(--font-display);font-size:1.25rem;font-weight:500;margin-bottom:1.25rem;}
+  .my-course-row{display:flex;align-items:center;gap:1rem;padding:0.95rem 0;border-bottom:1px solid var(--bloom-border);}
+  .my-course-row:last-child{border:none;}
+  .my-course-thumb{width:56px;height:56px;border-radius:var(--r-md);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.4rem;font-weight:300;}
+  .my-course-info{flex:1;}
+  .my-course-name{font-size:0.85rem;font-weight:600;margin-bottom:0.2rem;}
+  .my-course-prog{font-size:0.72rem;color:var(--bloom-muted);}
+  .nft-badge-sm{font-family:var(--font-mono);font-size:0.6rem;padding:0.18rem 0.48rem;border-radius:999px;border:1px solid;}
+  .nft-owned{background:var(--bloom-gold-pale);border-color:var(--bloom-gold-light);color:#7a5a1a;}
+  .nft-locked{background:rgba(14,14,14,0.04);border-color:var(--bloom-border);color:var(--bloom-muted);}
+
+  /* LIBRARY */
+  .lib-layout{display:grid;grid-template-columns:250px 1fr;gap:2rem;padding:2rem 0 4rem;align-items:start;}
+  .lib-filters{position:sticky;top:calc(var(--nav-h) + 1rem);border:1px solid var(--bloom-border);border-radius:var(--r-lg);padding:1.4rem;background:var(--bloom-paper);}
+  .lib-filter-title{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom-muted);margin-bottom:1rem;}
+  .lib-search{width:100%;border:1px solid var(--bloom-border);border-radius:var(--r-sm);padding:0.52rem 0.8rem;font-family:var(--font-body);font-size:0.8rem;background:var(--bloom-cream);color:var(--bloom-ink);outline:none;margin-bottom:1.4rem;}
+  .lib-search:focus{border-color:var(--bloom-gold);}
+  .lib-filter-group{margin-bottom:1.4rem;}
+  .lib-filter-group-title{font-size:0.72rem;font-weight:600;color:var(--bloom-muted);margin-bottom:0.5rem;}
+  .lib-filter-opt{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;padding:0.28rem 0;cursor:pointer;color:var(--bloom-muted);}
+  .lib-filter-opt:hover{color:var(--bloom-ink);}
+  .lib-filter-opt input{accent-color:var(--bloom-gold);}
+  .ms-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;}
+  .ms-card{background:var(--bloom-paper);border:1px solid var(--bloom-border);border-radius:var(--r-lg);padding:1.4rem;transition:all 0.25s;cursor:pointer;}
+  .ms-card:hover{border-color:var(--bloom-border-strong);transform:translateY(-3px);box-shadow:0 8px 20px rgba(14,14,14,0.08);}
+  .ms-era{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--bloom-muted);margin-bottom:0.7rem;}
+  .ms-title{font-family:var(--font-display);font-size:1.08rem;font-weight:500;margin-bottom:0.25rem;}
+  .ms-author{font-size:0.78rem;color:var(--bloom-muted);font-style:italic;margin-bottom:0.7rem;}
+  .ms-tags{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.95rem;}
+  .ms-tag{font-size:0.65rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.18rem 0.5rem;border-radius:999px;background:rgba(14,14,14,0.06);color:var(--bloom-muted);}
+  .ms-footer{display:flex;align-items:center;justify-content:space-between;}
+  .ms-status{font-size:0.72rem;font-weight:600;}
+  .ms-status.open{color:var(--bloom-sage);}
+  .ms-status.review{color:var(--bloom-gold);}
+  .ms-status.done{color:var(--bloom-muted);}
+  .ms-contrib{background:var(--bloom-sage-pale);color:var(--bloom-sage);border:1px solid var(--bloom-sage-light);border-radius:var(--r-sm);padding:0.28rem 0.7rem;font-size:0.7rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+  .ms-contrib:hover{background:var(--bloom-sage);color:white;}
+
+  /* WORKSPACE */
+  .workspace{height:calc(100vh - var(--nav-h));display:flex;flex-direction:column;}
+  .ws-topbar{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 2rem;border-bottom:1px solid var(--bloom-border);background:var(--bloom-paper);flex-shrink:0;}
+  .ws-title{font-family:var(--font-display);font-size:0.98rem;font-weight:500;}
+  .ws-meta{font-size:0.72rem;color:var(--bloom-muted);}
+  .ws-actions{display:flex;gap:0.5rem;align-items:center;}
+  .ws-reward{background:var(--bloom-gold-pale);border:1px solid var(--bloom-gold-light);border-radius:var(--r-sm);padding:0.28rem 0.7rem;font-size:0.72rem;font-weight:600;color:#7a5a1a;}
+  .ws-body{flex:1;display:grid;grid-template-columns:1fr 1fr 290px;overflow:hidden;}
+  .ws-pane{display:flex;flex-direction:column;border-right:1px solid var(--bloom-border);}
+  .ws-pane:last-child{border-right:none;}
+  .ws-pane-header{padding:0.62rem 1.2rem;background:var(--bloom-paper);border-bottom:1px solid var(--bloom-border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
+  .ws-pane-label{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom-muted);}
+  .ws-pane-lang{font-size:0.7rem;color:var(--bloom-muted);}
+  .ws-pane-content{flex:1;overflow-y:auto;padding:1.4rem;}
+  .ws-original{font-family:Georgia,serif;font-size:0.88rem;line-height:2.1;color:var(--bloom-ink);white-space:pre-wrap;}
+  .ws-original em{background:rgba(201,168,76,0.2);padding:0 2px;border-radius:2px;}
+  .ws-textarea{width:100%;height:100%;border:none;resize:none;font-family:var(--font-body);font-size:0.85rem;line-height:1.9;color:var(--bloom-ink);background:transparent;outline:none;padding:0;}
+  .ws-ai-msg{font-size:0.78rem;line-height:1.75;color:var(--bloom-ink);}
+  .ws-ai-suggest{margin-top:1rem;padding:0.8rem 0.95rem;border:1px solid var(--bloom-gold-light);border-radius:var(--r-md);background:var(--bloom-gold-pale);font-size:0.78rem;line-height:1.7;color:var(--bloom-ink);cursor:pointer;}
+  .ws-ai-suggest:hover{border-color:var(--bloom-gold);}
+  .ws-ai-suggest-label{font-size:0.65rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#7a5a1a;margin-bottom:0.35rem;}
+  .ws-ai-actions{display:flex;flex-direction:column;gap:0.35rem;margin-top:0.95rem;}
+  .ws-ai-action{border:1px solid var(--bloom-border);border-radius:var(--r-sm);padding:0.42rem 0.7rem;background:transparent;font-family:var(--font-body);font-size:0.72rem;color:var(--bloom-muted);cursor:pointer;text-align:left;transition:all 0.18s;}
+  .ws-ai-action:hover{border-color:var(--bloom-border-strong);color:var(--bloom-ink);background:rgba(14,14,14,0.04);}
+
+  /* FUNDING */
+  .funding-grid{padding:2rem 0 4rem;display:grid;gap:2rem;}
+  .treasury-card{background:var(--bloom-ink);color:var(--bloom-paper);border-radius:var(--r-lg);padding:2rem 2.4rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;}
+  .treasury-label{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.7rem;}
+  .treasury-amount{font-family:var(--font-display);font-size:2.8rem;font-weight:300;margin-bottom:0.25rem;}
+  .treasury-usd{font-size:0.82rem;color:rgba(245,240,232,0.5);}
+  .treasury-thresh{margin-top:1.4rem;}
+  .treasury-thresh-label{display:flex;justify-content:space-between;font-size:0.75rem;color:rgba(245,240,232,0.5);margin-bottom:0.5rem;}
+  .treasury-track{height:7px;background:rgba(245,240,232,0.12);border-radius:999px;overflow:hidden;}
+  .treasury-fill{height:100%;border-radius:999px;background:var(--bloom-gold);}
+  .treasury-status{display:flex;align-items:center;gap:0.7rem;margin-top:1rem;padding:0.9rem 1.2rem;border-radius:var(--r-md);border:1px solid rgba(245,240,232,0.12);background:rgba(245,240,232,0.06);}
+  .status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .status-dot.locked{background:#888;}
+  .status-dot.unlocked{background:var(--bloom-sage-light);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .status-text-main{font-size:0.8rem;font-weight:600;}
+  .status-text-sub{font-size:0.7rem;color:rgba(245,240,232,0.5);}
+  .treasury-stats{display:flex;flex-direction:column;gap:1.2rem;}
+  .t-stat{padding:0.95rem 1.2rem;border:1px solid rgba(245,240,232,0.12);border-radius:var(--r-md);}
+  .t-stat-label{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-bottom:0.4rem;}
+  .t-stat-val{font-family:var(--font-display);font-size:1.35rem;font-weight:400;}
+  .proposals-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+  .proposals-title{font-family:var(--font-display);font-size:1.45rem;font-weight:400;}
+  .proposal-list{display:flex;flex-direction:column;gap:1rem;}
+  .proposal-card{background:var(--bloom-paper);border:1px solid var(--bloom-border);border-radius:var(--r-lg);padding:1.4rem;transition:all 0.2s;}
+  .proposal-card:hover{border-color:var(--bloom-border-strong);}
+  .proposal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.95rem;}
+  .proposal-title{font-family:var(--font-display);font-size:1.05rem;font-weight:500;}
+  .proposal-status{font-size:0.65rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.22rem 0.6rem;border-radius:999px;flex-shrink:0;white-space:nowrap;}
+  .ps-active{background:var(--bloom-sage-pale);color:var(--bloom-sage);}
+  .ps-pending{background:var(--bloom-gold-pale);color:#7a5a1a;}
+  .ps-passed{background:#e3f2fd;color:#0d47a1;}
+  .proposal-meta{font-size:0.75rem;color:var(--bloom-muted);margin-bottom:0.7rem;}
+  .proposal-desc{font-size:0.82rem;color:var(--bloom-muted);line-height:1.7;margin-bottom:1.2rem;}
+  .vote-track{display:flex;height:5px;border-radius:999px;overflow:hidden;margin-bottom:0.45rem;}
+  .vote-for{background:var(--bloom-sage-light);}
+  .vote-against{background:#f0bebe;}
+  .vote-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--bloom-muted);margin-bottom:0.95rem;}
+  .vote-actions{display:flex;gap:0.5rem;}
+  .vote-btn{padding:0.38rem 1rem;border-radius:var(--r-sm);font-family:var(--font-body);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+  .vote-for-btn{background:var(--bloom-sage-pale);color:var(--bloom-sage);border:1px solid var(--bloom-sage-light);}
+  .vote-for-btn:hover{background:var(--bloom-sage);color:white;}
+  .vote-against-btn{background:rgba(14,14,14,0.04);color:var(--bloom-muted);border:1px solid var(--bloom-border);}
+  .vote-against-btn:hover{background:rgba(14,14,14,0.08);color:var(--bloom-ink);}
+  .proposal-req{display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;padding:0.45rem 0.8rem;border-radius:var(--r-sm);}
+  .req-locked{background:rgba(14,14,14,0.06);color:var(--bloom-muted);}
+  .req-unlocked{background:var(--bloom-sage-pale);color:var(--bloom-sage);}
+  .donate-btn{background:var(--bloom-gold);color:white;border:none;border-radius:var(--r-sm);padding:0.52rem 1.3rem;font-family:var(--font-body);font-size:0.8rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+  .donate-btn:hover{background:#b8922a;transform:translateY(-1px);}
+
+  /* FOOTER */
+  footer{background:var(--bloom-paper);border-top:1px solid var(--bloom-border);padding:2.4rem 0;}
+  .footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+  .footer-logo{font-family:var(--font-display);font-size:1rem;font-weight:500;color:var(--bloom-muted);}
+  .footer-links{display:flex;gap:1.4rem;}
+  .footer-link{font-size:0.78rem;color:var(--bloom-muted);cursor:pointer;text-decoration:none;}
+  .footer-link:hover{color:var(--bloom-ink);}
+  .footer-copy{font-size:0.72rem;color:var(--bloom-muted);}
+
+  /* RESPONSIVE */
+  @media(max-width:960px){
+    .hero{grid-template-columns:1fr;padding:3rem 1.5rem;}
+    .mandala{width:260px;height:260px;}
+    .pillar-grid{grid-template-columns:1fr 1fr;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .narrative{grid-template-columns:1fr;gap:2.5rem;}
+    .token-grid{grid-template-columns:1fr;}
+    .course-grid{grid-template-columns:1fr 1fr;}
+    .learn-layout{grid-template-columns:1fr;}
+    .lib-layout{grid-template-columns:1fr;}
+    .lib-filters{position:static;}
+    .ws-body{grid-template-columns:1fr;overflow-y:auto;}
+    .ms-grid{grid-template-columns:1fr;}
+    .dash-row{grid-template-columns:1fr 1fr;}
+    .treasury-card{grid-template-columns:1fr;}
+    nav{gap:0.75rem;padding:0 1rem;}
+    .nav-links{gap:0;}
+    .nav-link{padding:0.38rem 0.55rem;font-size:0.7rem;}
+  }
+  @media(max-width:600px){
+    .pillar-grid,.course-grid{grid-template-columns:1fr;}
+    .dash-row{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-logo" onclick="goPage('landing')">Bloom <span>DAO</span></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="goPage('landing')"><span class="lang-id">Beranda</span><span class="lang-en">Home</span></button>
+    <button class="nav-link" onclick="goPage('academy')"><span class="lang-id">Akademi</span><span class="lang-en">Academy</span></button>
+    <button class="nav-link" onclick="goPage('library')"><span class="lang-id">Perpustakaan</span><span class="lang-en">Library</span></button>
+    <button class="nav-link" onclick="goPage('contribution')"><span class="lang-id">Kontribusi</span><span class="lang-en">Contribute</span></button>
+    <button class="nav-link" onclick="goPage('funding')"><span class="lang-id">Dana DAO</span><span class="lang-en">DAO Funding</span></button>
+    <button class="nav-link" onclick="goPage('dashboard')"><span class="lang-id">Dasbor</span><span class="lang-en">Dashboard</span></button>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-id" onclick="setLang('id')">ID</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+  <div class="nav-token" onclick="alert('420 SPIRIT tersimpan di dompetmu / 420 SPIRIT in your wallet')">
+    <div class="dot"></div>420 SPIRIT
+  </div>
+  <button class="nav-cta"><span class="lang-id">Hubungkan</span><span class="lang-en">Connect</span></button>
+</nav>
+
+<!-- ============================================================ -->
+<!-- PAGE: LANDING -->
+<!-- ============================================================ -->
+<div class="page active" id="page-landing">
+  <!-- HERO -->
+  <div class="hero container" style="display:grid">
+    <div>
+      <div class="hero-badge">
+        <span class="lang-id">Ekosistem Web3 + AI untuk Pengetahuan</span>
+        <span class="lang-en">Web3 + AI Knowledge Ecosystem</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="lang-id">Di Mana Kebijaksanaan Kuno Bertemu <em>Kesadaran</em> Kolektif</span>
+        <span class="lang-en">Where Ancient Wisdom Meets <em>Collective</em> Consciousness</span>
+      </h1>
+      <p class="hero-desc">
+        <span class="lang-id">Bloom DAO adalah ekosistem terbuka untuk menerjemahkan, mengkurasi, dan mendistribusikan naskah-naskah terbaik umat manusia — ditenagai kontribusi komunitas, bantuan AI, dan ekonomi token yang adil.</span>
+        <span class="lang-en">Bloom DAO is an open ecosystem for translating, curating, and distributing humanity's greatest manuscripts — powered by community contribution, AI assistance, and a fair token economy.</span>
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="goPage('library')">
+          <span class="lang-id">Jelajahi Perpustakaan</span>
+          <span class="lang-en">Explore Library</span>
+        </button>
+        <button class="btn-ghost" onclick="goPage('academy')">
+          <span class="lang-id">Masuk Akademi</span>
+          <span class="lang-en">Join Academy</span>
+        </button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="mandala">
+        <div class="mandala-ring"></div>
+        <div class="mandala-ring"></div>
+        <div class="mandala-ring"></div>
+        <div class="mandala-ring"></div>
+        <div class="mandala-core">✦</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-num">1.247</div>
+          <div class="stat-label"><span class="lang-id">Naskah dalam Perpustakaan</span><span class="lang-en">Manuscripts in Library</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">8.903</div>
+          <div class="stat-label"><span class="lang-id">Kontributor di Seluruh Dunia</span><span class="lang-en">Contributors Worldwide</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">342</div>
+          <div class="stat-label"><span class="lang-id">Terjemahan Selesai</span><span class="lang-en">Translations Completed</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">2,4 Juta</div>
+          <div class="stat-label"><span class="lang-id">Token SPIRIT Terdistribusi</span><span class="lang-en">SPIRIT Tokens Distributed</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PILLARS -->
+  <section class="pillars">
+    <div class="container">
+      <div class="section-label"><span class="lang-id">Pilar Platform</span><span class="lang-en">Platform Pillars</span></div>
+      <h2 class="section-title">
+        <span class="lang-id">Empat Cara untuk <em style="font-style:italic;color:var(--bloom-gold)">Mekar</em></span>
+        <span class="lang-en">Four Ways to <em style="font-style:italic;color:var(--bloom-gold)">Bloom</em></span>
+      </h2>
+      <p class="section-desc">
+        <span class="lang-id">Ekosistem hidup di mana setiap tindakan membaca, menerjemahkan, mengajar, atau mendanai menciptakan riak pengetahuan kolektif.</span>
+        <span class="lang-en">A living ecosystem where every act of reading, translating, teaching, or funding creates ripples of collective knowledge.</span>
+      </p>
+      <div class="pillar-grid">
+        <div class="pillar-card" onclick="goPage('library')">
+          <div class="pillar-icon gold">📚</div>
+          <div class="pillar-name">Pilar 01</div>
+          <div class="pillar-title"><span class="lang-id">Perpustakaan</span><span class="lang-en">Library</span></div>
+          <div class="pillar-desc">
+            <span class="lang-id">Penemuan dan terjemahan naskah domain publik dari berbagai peradaban dan abad, dibantu oleh kecerdasan buatan.</span>
+            <span class="lang-en">AI-assisted discovery and translation of public domain manuscripts from across civilizations and centuries.</span>
+          </div>
+        </div>
+        <div class="pillar-card" onclick="goPage('contribution')">
+          <div class="pillar-icon sage">✍️</div>
+          <div class="pillar-name">Pilar 02</div>
+          <div class="pillar-title"><span class="lang-id">Kontribusi</span><span class="lang-en">Contribution</span></div>
+          <div class="pillar-desc">
+            <span class="lang-id">Terjemahkan, sunting, dan validasi teks. Setiap kontribusi bermakna mendapat token SPIRIT sesuai kualitas dan volume.</span>
+            <span class="lang-en">Translate, edit, and validate texts. Every meaningful contribution earns SPIRIT tokens proportional to quality and volume.</span>
+          </div>
+        </div>
+        <div class="pillar-card" onclick="goPage('academy')">
+          <div class="pillar-icon indigo">🎓</div>
+          <div class="pillar-name">Pilar 03</div>
+          <div class="pillar-title"><span class="lang-id">Akademi</span><span class="lang-en">Academy</span></div>
+          <div class="pillar-desc">
+            <span class="lang-id">Kursus terstruktur tentang filsafat, sejarah, sains, dan kesadaran — dengan tutor AI dan akses berbasis NFT.</span>
+            <span class="lang-en">Structured courses on philosophy, history, science, and consciousness — with AI tutor and NFT-gated access.</span>
+          </div>
+        </div>
+        <div class="pillar-card" onclick="goPage('funding')">
+          <div class="pillar-icon rose">🏛️</div>
+          <div class="pillar-name">Pilar 04</div>
+          <div class="pillar-title"><span class="lang-id">Dana DAO</span><span class="lang-en">DAO Funding</span></div>
+          <div class="pillar-desc">
+            <span class="lang-id">Perbendaharaan transparan di mana proposal komunitas dipilih, dan dana hanya cair setelah ambang konsensus tercapai.</span>
+            <span class="lang-en">A transparent treasury where community proposals are voted on, and funds unlock only after consensus thresholds are met.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NARRATIVE -->
+  <section style="background:var(--bloom-paper)">
+    <div class="container">
+      <div class="narrative">
+        <div class="narrative-quote">
+          <span class="lang-id">"Pengetahuan bukan milik — ia <em>dirawat</em>, diteruskan, dan dihidupkan kembali oleh setiap generasi yang menerimanya."</span>
+          <span class="lang-en">"Knowledge is not owned — it is <em>tended</em>, passed on, and made alive again by each generation that receives it."</span>
+        </div>
+        <div class="narrative-text">
+          <p>
+            <span class="lang-id">Bloom DAO percaya bahwa teks-teks terbaik umat manusia — dari puisi Sufi hingga risalah ilmiah kuno — adalah milik semua orang. Namun sebagian besar masih terkunci di balik hambatan bahasa, paywall, atau sekadar ketidaktahuan.</span>
+            <span class="lang-en">Bloom DAO believes that humanity's greatest texts — from Sufi poetry to ancient scientific treatises — belong to everyone. Yet most remain locked behind language barriers, paywalls, or simple obscurity.</span>
+          </p>
+          <p>
+            <span class="lang-id">Kami membangun ekosistem di mana AI melakukan kerja berat penemuan dan terjemahan awal, sementara editor manusia, cendekiawan, dan pembaca yang bersemangat membentuk makna, konteks, dan nuansa budaya.</span>
+            <span class="lang-en">We are building an ecosystem where AI does the heavy lifting of discovery and first-pass translation, while human editors, scholars, and passionate readers shape meaning, context, and cultural nuance.</span>
+          </p>
+          <p>
+            <span class="lang-id">Setiap kontribusi dicatat, dihargai, dan dikenang. Setiap donasi mendanai pekerjaan pelestarian nyata. Setiap kelas menyebarkan pemahaman lebih jauh.</span>
+            <span class="lang-en">Every contribution is recorded, rewarded, and remembered. Every donation funds real preservation work. Every class spreads understanding further.</span>
+          </p>
+          <button class="btn-primary" style="margin-top:1rem" onclick="goPage('funding')">
+            <span class="lang-id">Dukung Perbendaharaan →</span>
+            <span class="lang-en">Support the Treasury →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOKEN SECTION -->
+  <section class="token-section">
+    <div class="container">
+      <div class="token-grid">
+        <div>
+          <div class="section-label" style="color:rgba(245,240,232,0.5)">
+            <span class="lang-id">Ekonomi Token</span><span class="lang-en">The Economy</span>
+          </div>
+          <h2 class="token-title">
+            <span class="lang-id">Token SPIRIT — Utilitas, Bukan Spekulasi</span>
+            <span class="lang-en">SPIRIT Token — Utility, Not Speculation</span>
+          </h2>
+          <p class="token-desc">
+            <span class="lang-id">SPIRIT adalah denyut nadi ekosistem Bloom. Diperoleh melalui kontribusi, digunakan untuk pengetahuan, dan dipakai untuk tata kelola.</span>
+            <span class="lang-en">SPIRIT is the lifeblood of the Bloom ecosystem. Earned through contribution, spent on knowledge, used for governance.</span>
+          </p>
+          <div class="token-feats">
+            <div class="token-feat">
+              <div class="token-feat-icon">🖊️</div>
+              <div>
+                <div class="token-feat-title"><span class="lang-id">Dapatkan dengan Berkontribusi</span><span class="lang-en">Earn by Contributing</span></div>
+                <div class="token-feat-desc"><span class="lang-id">Terjemahkan naskah, validasi kalimat, atau tinjau kursus — dapatkan SPIRIT sesuai kualitas dan volume kontribusi.</span><span class="lang-en">Translate a manuscript, validate a passage, or review a course — earn SPIRIT proportional to quality and volume.</span></div>
+              </div>
+            </div>
+            <div class="token-feat">
+              <div class="token-feat-icon">🎓</div>
+              <div>
+                <div class="token-feat-title"><span class="lang-id">Akses Kursus Akademi</span><span class="lang-en">Access Academy Courses</span></div>
+                <div class="token-feat-desc"><span class="lang-id">Gunakan SPIRIT untuk membuka kursus atau beli NFT akses seumur hidup sebagai hak belajar permanen.</span><span class="lang-en">Use SPIRIT to unlock courses or purchase NFT access passes for lifetime learning rights.</span></div>
+              </div>
+            </div>
+            <div class="token-feat">
+              <div class="token-feat-icon">🗳️</div>
+              <div>
+                <div class="token-feat-title"><span class="lang-id">Pilih Proposal</span><span class="lang-en">Vote on Proposals</span></div>
+                <div class="token-feat-desc"><span class="lang-id">Pemegang token menentukan alokasi perbendaharaan, prioritas kurikulum, dan arah platform melalui tata kelola DAO.</span><span class="lang-en">Token holders shape treasury allocation, curriculum priorities, and platform direction via DAO governance.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;">
+          <div style="text-align:center">
+            <div class="spirit-orb"></div>
+            <div style="margin-top:1.5rem;font-family:var(--font-mono);font-size:0.7rem;color:rgba(245,240,232,0.35);letter-spacing:0.15em">BLOOM.SPIRIT / ERC-20</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <section style="padding:5rem 0;text-align:center;background:var(--bloom-cream)">
+    <div class="container">
+      <div class="section-label" style="text-align:center;margin-bottom:1rem">
+        <span class="lang-id">Mulai Perjalananmu</span><span class="lang-en">Begin Your Journey</span>
+      </div>
+      <h2 style="font-family:var(--font-display);font-size:clamp(1.9rem,4vw,3.2rem);font-weight:400;margin-bottom:1rem">
+        <span class="lang-id">Siap untuk <em style="color:var(--bloom-gold);font-style:italic">Mekar</em>?</span>
+        <span class="lang-en">Ready to <em style="color:var(--bloom-gold);font-style:italic">Bloom</em>?</span>
+      </h2>
+      <p style="color:var(--bloom-muted);max-width:480px;margin:0 auto 2rem;line-height:1.8;font-size:0.93rem">
+        <span class="lang-id">Bergabunglah dengan ribuan pembaca, penerjemah, dan cendekiawan yang membangun arsip pengetahuan paling terbuka di dunia.</span>
+        <span class="lang-en">Join thousands of readers, translators, and scholars building humanity's most accessible knowledge archive.</span>
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn-primary" onclick="goPage('library')"><span class="lang-id">Telusuri Perpustakaan</span><span class="lang-en">Browse the Library</span></button>
+        <button class="btn-ghost" onclick="goPage('contribution')"><span class="lang-id">Mulai Berkontribusi</span><span class="lang-en">Start Contributing</span></button>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Bloom DAO — <span class="lang-id">Mekar Kesadaran</span><span class="lang-en">A Bloom of Consciousness</span></div>
+      <div class="footer-links">
+        <a class="footer-link" href="#">Whitepaper</a>
+        <a class="footer-link" href="#">GitHub</a>
+        <a class="footer-link" href="#">Discord</a>
+        <a class="footer-link" href="#">Twitter</a>
+      </div>
+      <div class="footer-copy">© 2025 Bloom DAO. <span class="lang-id">Sumber terbuka, pengetahuan terbuka.</span><span class="lang-en">Open source, open knowledge.</span></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: ACADEMY -->
+<!-- ============================================================ -->
+<div class="page" id="page-academy">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="page-tag"><span class="lang-id">Bloom Akademi</span><span class="lang-en">Bloom Academy</span></div>
+          <h1 class="page-h1"><span class="lang-id">Kursus <em>Kesadaran</em></span><span class="lang-en">Courses in <em>Consciousness</em></span></h1>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <input type="text" placeholder="Cari kursus… / Search courses…" style="border:1px solid var(--bloom-border);border-radius:var(--r-sm);padding:0.48rem 0.95rem;font-family:var(--font-body);font-size:0.8rem;background:var(--bloom-paper);color:var(--bloom-ink);outline:none;width:210px">
+          <button class="btn-primary" onclick="goPage('dashboard')"><span class="lang-id">Dasbor Saya →</span><span class="lang-en">My Dashboard →</span></button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active"><span class="lang-id">Semua</span><span class="lang-en">All</span></button>
+        <button class="filter-btn"><span class="lang-id">Filsafat</span><span class="lang-en">Philosophy</span></button>
+        <button class="filter-btn"><span class="lang-id">Sejarah</span><span class="lang-en">History</span></button>
+        <button class="filter-btn"><span class="lang-id">Sains</span><span class="lang-en">Science</span></button>
+        <button class="filter-btn"><span class="lang-id">Mistisisme</span><span class="lang-en">Mysticism</span></button>
+        <button class="filter-btn"><span class="lang-id">Seni & Sastra</span><span class="lang-en">Art & Literature</span></button>
+        <button class="filter-btn"><span class="lang-id">Gratis</span><span class="lang-en">Free</span></button>
+        <button class="filter-btn">NFT Access</button>
+      </div>
+    </div>
+    <div class="course-grid">
+      <div class="course-card" onclick="goPage('learn')">
+        <div class="course-thumb t1"><span style="opacity:0.55">☽</span><div class="nft-badge">NFT ACCESS</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="course-cat cat-phil"><span class="lang-id">Filsafat</span><span class="lang-en">Philosophy</span></span><span class="course-level"><span class="lang-id">Menengah</span><span class="lang-en">Intermediate</span></span></div>
+          <div class="course-title"><span class="lang-id">Jalan Sufi: Rumi, Ibn Arabi & Perjalanan Batin</span><span class="lang-en">The Sufi Path: Rumi, Ibn Arabi & the Inner Journey</span></div>
+          <div class="course-desc"><span class="lang-id">Jelajahi mistisisme Islam melalui teks-teks terbesarnya, dengan catatan terjemahan kontekstual dan praktik kontemplatif.</span><span class="lang-en">Explore Islamic mysticism through its greatest texts, with contextual translation notes and contemplative practices.</span></div>
+          <div class="course-footer"><div class="course-price price-spirit">120 SPIRIT</div><button class="course-enroll"><span class="lang-id">Daftar</span><span class="lang-en">Enroll</span></button></div>
+        </div>
+      </div>
+      <div class="course-card" onclick="goPage('learn')">
+        <div class="course-thumb t2"><span style="opacity:0.55">⚛</span><div class="nft-badge">NFT ACCESS</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="course-cat cat-sci"><span class="lang-id">Sains</span><span class="lang-en">Science</span></span><span class="course-level"><span class="lang-id">Pemula</span><span class="lang-en">Beginner</span></span></div>
+          <div class="course-title"><span class="lang-id">Dari Alkimia ke Kimia: Sejarah Transformasi</span><span class="lang-en">Alchemy to Chemistry: A History of Transformation</span></div>
+          <div class="course-desc"><span class="lang-id">Telusuri evolusi pemahaman manusia dari naskah alchemical hingga lahirnya kimia modern.</span><span class="lang-en">Trace the evolution of human understanding from alchemical manuscripts to the birth of modern chemistry.</span></div>
+          <div class="course-footer"><div class="course-price price-spirit">80 SPIRIT</div><button class="course-enroll"><span class="lang-id">Daftar</span><span class="lang-en">Enroll</span></button></div>
+        </div>
+      </div>
+      <div class="course-card" onclick="goPage('learn')">
+        <div class="course-thumb t3"><span style="opacity:0.55">📜</span></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="course-cat cat-hist"><span class="lang-id">Sejarah</span><span class="lang-en">History</span></span><span class="course-level"><span class="lang-id">Lanjutan</span><span class="lang-en">Advanced</span></span></div>
+          <div class="course-title"><span class="lang-id">Jalur Sutra Gagasan: Bagaimana Pengetahuan Menyeberangi Dunia</span><span class="lang-en">The Silk Road of Ideas: How Knowledge Crossed the World</span></div>
+          <div class="course-desc"><span class="lang-id">Penyelaman mendalam tentang bagaimana filsafat, matematika, dan kedokteran berpindah antara Timur dan Barat selama berabad-abad.</span><span class="lang-en">A deep dive into how philosophy, mathematics, and medicine traveled between East and West over centuries.</span></div>
+          <div class="course-footer"><div class="course-price" style="color:var(--bloom-sage)"><span class="lang-id">Gratis</span><span class="lang-en">Free</span></div><button class="course-enroll"><span class="lang-id">Daftar</span><span class="lang-en">Enroll</span></button></div>
+        </div>
+      </div>
+      <div class="course-card" onclick="goPage('learn')">
+        <div class="course-thumb t4"><span style="opacity:0.55">🌿</span><div class="nft-badge">NFT ACCESS</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="course-cat cat-art"><span class="lang-id">Seni & Sastra</span><span class="lang-en">Art & Lit</span></span><span class="course-level"><span class="lang-id">Pemula</span><span class="lang-en">Beginner</span></span></div>
+          <div class="course-title"><span class="lang-id">Puisi Suci: Membaca Hafiz, Kabir & Mirabai</span><span class="lang-en">Sacred Poetry: Reading Hafiz, Kabir & Mirabai</span></div>
+          <div class="course-desc"><span class="lang-id">Selami puisi devosional dari tiga tradisi mistik. Bahasa asli + lokakarya terjemahan.</span><span class="lang-en">Immerse yourself in devotional poetry from three mystical traditions. Original language + translation workshop.</span></div>
+          <div class="course-footer"><div class="course-price price-spirit">60 SPIRIT</div><button class="course-enroll"><span class="lang-id">Daftar</span><span class="lang-en">Enroll</span></button></div>
+        </div>
+      </div>
+      <div class="course-card" onclick="goPage('learn')">
+        <div class="course-thumb t5"><span style="opacity:0.55">🌍</span></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="course-cat cat-hist"><span class="lang-id">Sejarah</span><span class="lang-en">History</span></span><span class="course-level"><span class="lang-id">Menengah</span><span class="lang-en">Intermediate</span></span></div>
+          <div class="course-title"><span class="lang-id">Perpustakaan yang Hilang: Melestarikan Teks-Teks Terancam Dunia</span><span class="lang-en">Lost Libraries: Preserving the World's Endangered Texts</span></div>
+          <div class="course-desc"><span class="lang-id">Apa yang hilang di Alexandria, Timbuktu, Nalanda? Kursus tentang pelestarian naskah dan politik pengetahuan.</span><span class="lang-en">What was lost in Alexandria, Timbuktu, Nalanda? A course on manuscript preservation and the politics of knowledge.</span></div>
+          <div class="course-footer"><div class="course-price" style="color:var(--bloom-sage)"><span class="lang-id">Gratis</span><span class="lang-en">Free</span></div><button class="course-enroll"><span class="lang-id">Daftar</span><span class="lang-en">Enroll</span></button></div>
+        </div>
+      </div>
+      <div class="course-card" onclick="goPage('learn')">
+        <div class="course-thumb t6"><span style="opacity:0.55">✦</span><div class="nft-badge">NFT ACCESS</div></div>
+        <div class="course-body">
+          <div class="course-meta"><span class="course-cat cat-phil"><span class="lang-id">Filsafat</span><span class="lang-en">Philosophy</span></span><span class="course-level"><span class="lang-id">Lanjutan</span><span class="lang-en">Advanced</span></span></div>
+          <div class="course-title"><span class="lang-id">Kesadaran Lintas Tradisi: Vedanta, Buddhisme & Neo-Platonisme</span><span class="lang-en">Consciousness Across Traditions: Vedanta, Buddhism & Neo-Platonism</span></div>
+          <div class="course-desc"><span class="lang-id">Studi komparatif kesadaran dari tiga silsilah filosofis besar. Teks primer dalam terjemahan paralel.</span><span class="lang-en">A comparative study of consciousness from three great philosophical lineages. Primary texts in parallel translation.</span></div>
+          <div class="course-footer"><div class="course-price price-spirit">150 SPIRIT</div><button class="course-enroll"><span class="lang-id">Daftar</span><span class="lang-en">Enroll</span></button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: LEARN -->
+<!-- ============================================================ -->
+<div class="page" id="page-learn">
+  <div class="learn-layout">
+    <div class="learn-sidebar">
+      <div class="learn-sidebar-title"><span class="lang-id">Jalan Sufi: Rumi, Ibn Arabi & Perjalanan Batin</span><span class="lang-en">The Sufi Path: Rumi, Ibn Arabi & the Inner Journey</span></div>
+      <div style="font-size:0.72rem;color:var(--bloom-muted);margin-bottom:1.2rem"><span class="lang-id">12 Pelajaran · 6 jam 40 menit</span><span class="lang-en">12 Lessons · 6h 40min</span></div>
+      <div class="lesson-list">
+        <div class="lesson-item done"><div class="lesson-num">✓</div><span class="lang-id">Pengantar: Apa itu Sufisme?</span><span class="lang-en">Introduction: What is Sufism?</span></div>
+        <div class="lesson-item done"><div class="lesson-num">✓</div><span class="lang-id">Rumi: Manusia di Balik Masnavi</span><span class="lang-en">Rumi: The Man Behind the Masnavi</span></div>
+        <div class="lesson-item active"><div class="lesson-num" style="background:var(--bloom-gold);color:white">3</div><span class="lang-id">Membaca Masnavi: Buku I</span><span class="lang-en">Reading the Masnavi: Book I</span></div>
+        <div class="lesson-item"><div class="lesson-num">4</div><span class="lang-id">Metafora Seruling Buluh</span><span class="lang-en">The Reed Flute Metaphor</span></div>
+        <div class="lesson-item"><div class="lesson-num">5</div><span class="lang-id">Fusus al-Hikam Ibn Arabi</span><span class="lang-en">Ibn Arabi's Fusus al-Hikam</span></div>
+        <div class="lesson-item"><div class="lesson-num">6</div><span class="lang-id">Konsep Fana</span><span class="lang-en">The Concept of Fana</span></div>
+        <div class="lesson-item"><div class="lesson-num">7</div><span class="lang-id">Darwis Berputar & Sama</span><span class="lang-en">Whirling Dervishes & Sama</span></div>
+        <div class="lesson-item"><div class="lesson-num">8</div><span class="lang-id">Maqam Hati</span><span class="lang-en">The Station of the Heart</span></div>
+        <div class="lesson-item"><div class="lesson-num">9</div><span class="lang-id">Puisi Persia sebagai Filsafat</span><span class="lang-en">Persian Poetry as Philosophy</span></div>
+        <div class="lesson-item"><div class="lesson-num">10</div><span class="lang-id">Relevansi Kontemporer</span><span class="lang-en">Contemporary Relevance</span></div>
+        <div class="lesson-item"><div class="lesson-num">11</div><span class="lang-id">Diskusi Komunitas</span><span class="lang-en">Community Discussion</span></div>
+        <div class="lesson-item"><div class="lesson-num">12</div><span class="lang-id">Refleksi Akhir & Penilaian</span><span class="lang-en">Final Reflection & Assessment</span></div>
+      </div>
+      <div style="margin-top:1.4rem;padding-top:1.4rem;border-top:1px solid var(--bloom-border)">
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom-muted);margin-bottom:0.5rem"><span class="lang-id">Akses Kamu</span><span class="lang-en">Your Access</span></div>
+        <div class="nft-badge-sm nft-owned" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.28rem 0.7rem">✦ NFT Pass #0142 · <span class="lang-id">Dimiliki</span><span class="lang-en">Owned</span></div>
+      </div>
+      <button class="btn-ghost" style="width:100%;margin-top:1rem;text-align:center" onclick="goPage('academy')"><span class="lang-id">← Kembali ke Kursus</span><span class="lang-en">← Back to Courses</span></button>
+    </div>
+    <div class="learn-main">
+      <div class="learn-video">
+        <div class="play-btn">
+          <svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M1 1L15 9L1 17V1Z" fill="rgba(245,240,232,0.65)" stroke="rgba(245,240,232,0.4)" stroke-width="1"/></svg>
+        </div>
+      </div>
+      <div class="learn-content">
+        <h2 class="learn-content-title">
+          <span class="lang-id">Membaca Masnavi: Buku I — Ratapan Seruling Buluh</span>
+          <span class="lang-en">Reading the Masnavi: Book I — The Reed's Lament</span>
+        </h2>
+        <p class="learn-content-body">
+          <span class="lang-id">Dalam pelajaran ini, kita membaca bait pembuka Masnavi Rumi — karya sastra mistik Persia yang paling terkenal. Puisi ini dimulai dengan tangisan seruling buluh yang terpisah dari asal-usulnya di rumpun buluh. Pemisahan ini — <em>hijr</em> — adalah metafora sentral untuk kerinduan jiwa akan penyatuan kembali dengan Yang Ilahi.<br><br>Kita akan membaca bahasa Persia asli bersama tiga terjemahan bahasa Inggris (Nicholson, Barks, dan Arberry), mengkaji bagaimana pilihan setiap penerjemah mengungkapkan pemahaman mereka sendiri tentang jalan mistik. Tutor AI Bloom dapat membantu menjelajahi frasa-frasa tertentu secara mendalam.</span>
+          <span class="lang-en">In this lesson, we read the opening verses of Rumi's Masnavi — the most celebrated work of Persian mystical literature. The poem begins with the cry of the reed flute, separated from its origin in the reed bed. This separation — <em>hijr</em> — is the central metaphor for the soul's yearning for reunion with the Divine.<br><br>We will read the original Persian alongside three English translations (Nicholson, Barks, and Arberry), examining how each translator's choices reveal their own understanding of the mystical path.</span>
+        </p>
+        <div class="ai-tutor">
+          <div class="ai-tutor-header">
+            <div class="ai-avatar">✦</div>
+            <div>
+              <div class="ai-label"><span class="lang-id">Tutor AI Bloom</span><span class="lang-en">Bloom AI Tutor</span></div>
+              <div class="ai-sub"><span class="lang-id">Spesialis teks Sufi & sastra Persia</span><span class="lang-en">Specialized in Sufi texts & Persian literature</span></div>
+            </div>
+          </div>
+          <div class="ai-messages" id="ai-msgs">
+            <div class="ai-msg bot">
+              <span class="lang-id">Selamat datang di Pelajaran 3. Saya telah menganalisis 18 bait pembuka Masnavi untuk kamu. Kata <em>nāy</em> (seruling buluh) muncul 7 kali — pengulangan ini disengaja. Apakah kamu ingin saya menjelaskan lapisan-lapisan maknanya?</span>
+              <span class="lang-en">Welcome to Lesson 3. I've analyzed the opening 18 verses of the Masnavi for you. The word <em>nāy</em> (reed flute) appears 7 times — this repetition is intentional. Would you like me to explain the layers of meaning?</span>
+            </div>
+          </div>
+          <div class="ai-input-row">
+            <input class="ai-input" type="text" id="ai-input-field" placeholder="Tanya tentang pelajaran ini… / Ask about this lesson…" onkeypress="if(event.key==='Enter')sendAI()">
+            <button class="ai-send" onclick="sendAI()"><span class="lang-id">Tanya →</span><span class="lang-en">Ask →</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: DASHBOARD -->
+<!-- ============================================================ -->
+<div class="page" id="page-dashboard">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="page-tag"><span class="lang-id">Akademi Kamu</span><span class="lang-en">Your Academy</span></div>
+          <h1 class="page-h1"><span class="lang-id"><em>Dasbor</em> Belajar</span><span class="lang-en">Learning <em>Dashboard</em></span></h1>
+        </div>
+        <button class="btn-ghost" onclick="goPage('academy')"><span class="lang-id">Telusuri Kursus Lainnya</span><span class="lang-en">Browse More Courses</span></button>
+      </div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dash-row">
+        <div class="dash-card"><div class="dash-stat-label"><span class="lang-id">Kursus Diikuti</span><span class="lang-en">Courses Enrolled</span></div><div class="dash-stat-val">4</div><div class="dash-stat-sub"><span class="lang-id">+1 bulan ini</span><span class="lang-en">+1 this month</span></div></div>
+        <div class="dash-card"><div class="dash-stat-label">SPIRIT <span class="lang-id">Diperoleh</span><span class="lang-en">Earned</span></div><div class="dash-stat-val">420</div><div class="dash-stat-sub"><span class="lang-id">↑ 180 dari kontribusi</span><span class="lang-en">↑ 180 from contributions</span></div></div>
+        <div class="dash-card"><div class="dash-stat-label"><span class="lang-id">NFT Pass Dimiliki</span><span class="lang-en">NFT Passes Held</span></div><div class="dash-stat-val">2</div><div class="dash-stat-sub">Sufi Path, Consciousness</div></div>
+        <div class="dash-card"><div class="dash-stat-label"><span class="lang-id">Kekuatan Suara</span><span class="lang-en">Voting Power</span></div><div class="dash-stat-val">420</div><div class="dash-stat-sub">1 SPIRIT = 1 <span class="lang-id">suara</span><span class="lang-en">vote</span></div></div>
+      </div>
+      <div class="dash-card">
+        <div class="my-courses-title"><span class="lang-id">Kursus Saya</span><span class="lang-en">My Courses</span></div>
+        <div class="my-course-row">
+          <div class="my-course-thumb t1">☽</div>
+          <div class="my-course-info">
+            <div class="my-course-name"><span class="lang-id">Jalan Sufi: Rumi, Ibn Arabi & Perjalanan Batin</span><span class="lang-en">The Sufi Path: Rumi, Ibn Arabi & the Inner Journey</span></div>
+            <div class="my-course-prog"><span class="lang-id">Pelajaran 3 dari 12 · 25% selesai</span><span class="lang-en">Lesson 3 of 12 · 25% complete</span></div>
+            <div class="progress-track" style="max-width:260px;margin-top:0.5rem"><div class="progress-fill" style="width:25%"></div></div>
+          </div>
+          <span class="nft-badge-sm nft-owned">NFT #0142</span>
+          <button class="course-enroll" onclick="goPage('learn')"><span class="lang-id">Lanjutkan</span><span class="lang-en">Continue</span></button>
+        </div>
+        <div class="my-course-row">
+          <div class="my-course-thumb t3">📜</div>
+          <div class="my-course-info">
+            <div class="my-course-name"><span class="lang-id">Perpustakaan yang Hilang</span><span class="lang-en">Lost Libraries: Preserving Endangered Texts</span></div>
+            <div class="my-course-prog"><span class="lang-id">Pelajaran 7 dari 10 · 70% selesai</span><span class="lang-en">Lesson 7 of 10 · 70% complete</span></div>
+            <div class="progress-track" style="max-width:260px;margin-top:0.5rem"><div class="progress-fill" style="width:70%"></div></div>
+          </div>
+          <span class="nft-badge-sm nft-locked"><span class="lang-id">Gratis</span><span class="lang-en">Free</span></span>
+          <button class="course-enroll" onclick="goPage('learn')"><span class="lang-id">Lanjutkan</span><span class="lang-en">Continue</span></button>
+        </div>
+        <div class="my-course-row">
+          <div class="my-course-thumb t6">✦</div>
+          <div class="my-course-info">
+            <div class="my-course-name"><span class="lang-id">Kesadaran Lintas Tradisi</span><span class="lang-en">Consciousness Across Traditions</span></div>
+            <div class="my-course-prog"><span class="lang-id">Pelajaran 1 dari 14 · 7% selesai</span><span class="lang-en">Lesson 1 of 14 · 7% complete</span></div>
+            <div class="progress-track" style="max-width:260px;margin-top:0.5rem"><div class="progress-fill" style="width:7%"></div></div>
+          </div>
+          <span class="nft-badge-sm nft-owned">NFT #0389</span>
+          <button class="course-enroll" onclick="goPage('learn')"><span class="lang-id">Mulai</span><span class="lang-en">Start</span></button>
+        </div>
+        <div class="my-course-row">
+          <div class="my-course-thumb t2">⚛</div>
+          <div class="my-course-info">
+            <div class="my-course-name"><span class="lang-id">Dari Alkimia ke Kimia</span><span class="lang-en">Alchemy to Chemistry</span></div>
+            <div class="my-course-prog"><span class="lang-id">Pelajaran 10 dari 10 · Selesai ✓</span><span class="lang-en">Lesson 10 of 10 · Completed ✓</span></div>
+            <div class="progress-track" style="max-width:260px;margin-top:0.5rem"><div class="progress-fill" style="width:100%;background:var(--bloom-sage-light)"></div></div>
+          </div>
+          <span class="nft-badge-sm nft-locked">80 SPIRIT</span>
+          <button class="course-enroll" style="background:var(--bloom-sage)"><span class="lang-id">Tinjau</span><span class="lang-en">Review</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: LIBRARY -->
+<!-- ============================================================ -->
+<div class="page" id="page-library">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="page-tag"><span class="lang-id">Bloom Perpustakaan</span><span class="lang-en">Bloom Library</span></div>
+          <h1 class="page-h1"><span class="lang-id"><em>Arsip</em> Umat Manusia</span><span class="lang-en">The <em>Archive</em> of Humanity</span></h1>
+        </div>
+        <button class="btn-primary" onclick="goPage('contribution')"><span class="lang-id">+ Kontribusi Terjemahan</span><span class="lang-en">+ Contribute a Translation</span></button>
+      </div>
+    </div>
+    <div class="lib-layout">
+      <div class="lib-filters">
+        <div class="lib-filter-title"><span class="lang-id">Filter & Cari</span><span class="lang-en">Filter & Search</span></div>
+        <input class="lib-search" type="text" placeholder="Cari judul, pengarang… / Search title, author…">
+        <div class="lib-filter-group">
+          <div class="lib-filter-group-title"><span class="lang-id">Bahasa Asal</span><span class="lang-en">Language Origin</span></div>
+          <label class="lib-filter-opt"><input type="checkbox" checked> <span class="lang-id">Arab</span><span class="lang-en">Arabic</span></label>
+          <label class="lib-filter-opt"><input type="checkbox" checked> <span class="lang-id">Persia</span><span class="lang-en">Persian</span></label>
+          <label class="lib-filter-opt"><input type="checkbox"> Sansekerta / Sanskrit</label>
+          <label class="lib-filter-opt"><input type="checkbox"> Yunani / Greek</label>
+          <label class="lib-filter-opt"><input type="checkbox"> Latin</label>
+          <label class="lib-filter-opt"><input type="checkbox"> <span class="lang-id">Cina</span><span class="lang-en">Chinese</span></label>
+        </div>
+        <div class="lib-filter-group">
+          <div class="lib-filter-group-title"><span class="lang-id">Periode</span><span class="lang-en">Era</span></div>
+          <label class="lib-filter-opt"><input type="checkbox" checked> <span class="lang-id">Klasik (sebelum 1000 M)</span><span class="lang-en">Classical (pre-1000 CE)</span></label>
+          <label class="lib-filter-opt"><input type="checkbox" checked> <span class="lang-id">Abad Pertengahan (1000–1500)</span><span class="lang-en">Medieval (1000–1500)</span></label>
+          <label class="lib-filter-opt"><input type="checkbox"> <span class="lang-id">Awal Modern (1500–1800)</span><span class="lang-en">Early Modern (1500–1800)</span></label>
+        </div>
+        <div class="lib-filter-group">
+          <div class="lib-filter-group-title"><span class="lang-id">Status</span><span class="lang-en">Status</span></div>
+          <label class="lib-filter-opt"><input type="checkbox" checked> <span class="lang-id">Terbuka untuk Kontribusi</span><span class="lang-en">Open for Contribution</span></label>
+          <label class="lib-filter-opt"><input type="checkbox"> <span class="lang-id">Dalam Tinjauan</span><span class="lang-en">In Review</span></label>
+          <label class="lib-filter-opt"><input type="checkbox"> <span class="lang-id">Selesai</span><span class="lang-en">Completed</span></label>
+        </div>
+        <div class="lib-filter-group">
+          <div class="lib-filter-group-title"><span class="lang-id">Bidang</span><span class="lang-en">Domain</span></div>
+          <label class="lib-filter-opt"><input type="checkbox" checked> <span class="lang-id">Filsafat</span><span class="lang-en">Philosophy</span></label>
+          <label class="lib-filter-opt"><input type="checkbox" checked> <span class="lang-id">Mistisisme</span><span class="lang-en">Mysticism</span></label>
+          <label class="lib-filter-opt"><input type="checkbox"> <span class="lang-id">Sains / Kedokteran</span><span class="lang-en">Science / Medicine</span></label>
+          <label class="lib-filter-opt"><input type="checkbox"> <span class="lang-id">Sastra / Puisi</span><span class="lang-en">Literature / Poetry</span></label>
+          <label class="lib-filter-opt"><input type="checkbox"> Matematika</label>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+          <div style="font-size:0.8rem;color:var(--bloom-muted)"><span class="lang-id">Menampilkan</span><span class="lang-en">Showing</span> <strong>248</strong> <span class="lang-id">naskah</span><span class="lang-en">manuscripts</span></div>
+          <select style="border:1px solid var(--bloom-border);border-radius:var(--r-sm);padding:0.38rem 0.7rem;font-family:var(--font-body);font-size:0.78rem;background:var(--bloom-paper);color:var(--bloom-ink);cursor:pointer">
+            <option>Urutkan: Terbaru / Recently Added</option>
+            <option>Paling Dibutuhkan / Most Needed</option>
+            <option>Hadiah Tertinggi / Highest Reward</option>
+          </select>
+        </div>
+        <div class="ms-grid">
+          <div class="ms-card" onclick="goPage('contribution')">
+            <div class="ms-era"><span class="lang-id">Abad 13 · Persia</span><span class="lang-en">13th Century · Persian</span></div>
+            <div class="ms-title">Masnavi-ye Ma'navi</div>
+            <div class="ms-author">Jalāl ad-Dīn Rūmī</div>
+            <div class="ms-tags"><span class="ms-tag"><span class="lang-id">Mistisisme</span><span class="lang-en">Mysticism</span></span><span class="ms-tag"><span class="lang-id">Puisi</span><span class="lang-en">Poetry</span></span><span class="ms-tag">Sufism</span></div>
+            <div class="ms-footer"><div class="ms-status open">● <span class="lang-id">Terbuka · Buku 3–6 Dibutuhkan</span><span class="lang-en">Open · Books 3–6 Needed</span></div><button class="ms-contrib" onclick="event.stopPropagation();goPage('contribution')"><span class="lang-id">Kontribusi</span><span class="lang-en">Contribute</span></button></div>
+          </div>
+          <div class="ms-card">
+            <div class="ms-era"><span class="lang-id">Abad 11 · Arab</span><span class="lang-en">11th Century · Arabic</span></div>
+            <div class="ms-title">Kitāb al-Shifāʾ (<span class="lang-id">Kitab Penyembuhan</span><span class="lang-en">Book of Healing</span>)</div>
+            <div class="ms-author">Ibn Sīnā (Avicenna)</div>
+            <div class="ms-tags"><span class="ms-tag"><span class="lang-id">Filsafat</span><span class="lang-en">Philosophy</span></span><span class="ms-tag"><span class="lang-id">Kedokteran</span><span class="lang-en">Medicine</span></span><span class="ms-tag">Logic</span></div>
+            <div class="ms-footer"><div class="ms-status review">◐ <span class="lang-id">Dalam Tinjauan · Bab 7–14</span><span class="lang-en">In Review · Ch. 7–14</span></div><button class="ms-contrib" style="background:rgba(14,14,14,0.04);color:var(--bloom-muted);border-color:var(--bloom-border)" disabled><span class="lang-id">Ditinjau</span><span class="lang-en">In Review</span></button></div>
+          </div>
+          <div class="ms-card" onclick="goPage('contribution')">
+            <div class="ms-era"><span class="lang-id">Abad 2 SM · Sansekerta</span><span class="lang-en">2nd Century BCE · Sanskrit</span></div>
+            <div class="ms-title">Arthashastra</div>
+            <div class="ms-author">Kauṭilya (Chanakya)</div>
+            <div class="ms-tags"><span class="ms-tag"><span class="lang-id">Politik</span><span class="lang-en">Politics</span></span><span class="ms-tag"><span class="lang-id">Ekonomi</span><span class="lang-en">Economics</span></span></div>
+            <div class="ms-footer"><div class="ms-status open">● <span class="lang-id">Terbuka · Buku 4–15 Dibutuhkan</span><span class="lang-en">Open · Books 4–15 Needed</span></div><button class="ms-contrib" onclick="event.stopPropagation();goPage('contribution')"><span class="lang-id">Kontribusi</span><span class="lang-en">Contribute</span></button></div>
+          </div>
+          <div class="ms-card">
+            <div class="ms-era"><span class="lang-id">Abad 14 · Arab</span><span class="lang-en">14th Century · Arabic</span></div>
+            <div class="ms-title">Muqaddimah</div>
+            <div class="ms-author">Ibn Khaldun</div>
+            <div class="ms-tags"><span class="ms-tag"><span class="lang-id">Sejarah</span><span class="lang-en">History</span></span><span class="ms-tag"><span class="lang-id">Sosiologi</span><span class="lang-en">Sociology</span></span></div>
+            <div class="ms-footer"><div class="ms-status done">✓ <span class="lang-id">Selesai</span><span class="lang-en">Completed</span></div><button class="ms-contrib" style="background:rgba(14,14,14,0.04);color:var(--bloom-muted);border-color:var(--bloom-border)" disabled><span class="lang-id">Arsip</span><span class="lang-en">Archived</span></button></div>
+          </div>
+          <div class="ms-card" onclick="goPage('contribution')">
+            <div class="ms-era"><span class="lang-id">Abad 1 M · Yunani</span><span class="lang-en">1st Century CE · Greek</span></div>
+            <div class="ms-title">Enchiridion</div>
+            <div class="ms-author">Epiktetos / Arrian</div>
+            <div class="ms-tags"><span class="ms-tag">Stoicism</span><span class="ms-tag">Ethics</span></div>
+            <div class="ms-footer"><div class="ms-status open">● <span class="lang-id">Terbuka · Teks penuh dibutuhkan</span><span class="lang-en">Open · Full text needed</span></div><button class="ms-contrib" onclick="event.stopPropagation();goPage('contribution')"><span class="lang-id">Kontribusi</span><span class="lang-en">Contribute</span></button></div>
+          </div>
+          <div class="ms-card">
+            <div class="ms-era"><span class="lang-id">Abad 12 · Arab</span><span class="lang-en">12th Century · Arabic</span></div>
+            <div class="ms-title">Fusus al-Hikam</div>
+            <div class="ms-author">Ibn ʿArabī</div>
+            <div class="ms-tags"><span class="ms-tag"><span class="lang-id">Mistisisme</span><span class="lang-en">Mysticism</span></span><span class="ms-tag">Metaphysics</span></div>
+            <div class="ms-footer"><div class="ms-status review">◐ <span class="lang-id">Dalam Tinjauan</span><span class="lang-en">In Review</span></div><button class="ms-contrib" style="background:rgba(14,14,14,0.04);color:var(--bloom-muted);border-color:var(--bloom-border)" disabled><span class="lang-id">Ditinjau</span><span class="lang-en">In Review</span></button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: CONTRIBUTION WORKSPACE -->
+<!-- ============================================================ -->
+<div class="page" id="page-contribution">
+  <div class="workspace">
+    <div class="ws-topbar">
+      <div>
+        <div class="ws-title">Masnavi-ye Ma'navi · <span class="lang-id">Buku</span><span class="lang-en">Book</span> III, <span class="lang-id">Bab</span><span class="lang-en">Chapter</span> 1</div>
+        <div class="ws-meta"><span class="lang-id">Persia → Indonesia (Inggris juga dibutuhkan) · Jalāl ad-Dīn Rūmī · Abad 13</span><span class="lang-en">Persian → English (Indonesian also needed) · Jalāl ad-Dīn Rūmī · 13th Century</span></div>
+      </div>
+      <div class="ws-actions">
+        <div class="ws-reward">+35 SPIRIT <span class="lang-id">saat selesai</span><span class="lang-en">on completion</span></div>
+        <button class="btn-ghost" style="padding:0.38rem 0.8rem;font-size:0.72rem" onclick="goPage('library')">←</button>
+        <button class="btn-primary" style="padding:0.38rem 0.8rem;font-size:0.72rem"><span class="lang-id">Simpan Draf</span><span class="lang-en">Save Draft</span></button>
+        <button style="background:var(--bloom-sage);color:white;border:none;border-radius:var(--r-sm);padding:0.38rem 0.8rem;font-family:var(--font-body);font-size:0.72rem;font-weight:600;cursor:pointer"><span class="lang-id">Kirim untuk Tinjauan</span><span class="lang-en">Submit for Review</span></button>
+      </div>
+    </div>
+    <div class="ws-body">
+      <!-- Original -->
+      <div class="ws-pane">
+        <div class="ws-pane-header">
+          <div class="ws-pane-label"><span class="lang-id">Teks Asli</span><span class="lang-en">Original Text</span></div>
+          <div class="ws-pane-lang">Persian (Farsi)</div>
+        </div>
+        <div class="ws-pane-content">
+          <div class="ws-original" style="direction:rtl;text-align:right;font-size:1.02rem;line-height:2.3">بشنو این نی چون شکایت می‌کند
+از جدایی‌ها حکایت می‌کند
+
+کز نیستان تا مرا ببریده‌اند
+در نفیرم مرد و زن نالیده‌اند
+
+سینه خواهم شرحه شرحه از <em>فراق</em>
+تا بگویم شرح درد اشتیاق
+
+هر کسی کو دور ماند از اصل خویش
+باز جوید روزگار وصل خویش</div>
+        </div>
+      </div>
+      <!-- Translation -->
+      <div class="ws-pane">
+        <div class="ws-pane-header">
+          <div class="ws-pane-label"><span class="lang-id">Terjemahan Kamu</span><span class="lang-en">Your Translation</span></div>
+          <div class="ws-pane-lang"><span class="lang-id">Indonesia</span><span class="lang-en">English</span></div>
+        </div>
+        <div class="ws-pane-content">
+          <textarea class="ws-textarea" id="ws-textarea-id" placeholder="Mulai terjemahanmu di sini…&#10;&#10;Panel Tutor AI di kanan dapat menyarankan terjemahan, menjelaskan konteks, dan menandai nuansa budaya.">Dengarlah seruling ini — betapa ia bercerita tentang perpisahan,
+Menyanyikan perih pengasingan dari asalnya.
+
+Sejak mereka memotongku dari rumpun buluh,
+Lelaki dan perempuan menangis mendengar ratapanku.
+
+Aku mendambakan dada yang tercabik-cabik oleh rindu,
+Agar aku dapat menuangkan ke dalamnya seluruh kisah hasrat cinta.
+
+Setiap jiwa yang jauh dari sumbernya
+Mencari kembali waktu penyatuannya.</textarea>
+          <textarea class="ws-textarea" id="ws-textarea-en" style="display:none" placeholder="Begin your translation here…">Listen to the reed — how it tells a tale of separation,
+Singing of the pain of exile from its origin.
+
+Ever since they cut me from the reed bed,
+Men and women have wept at my lament.
+
+I desire a chest torn open by longing,
+To pour into it the full description of love's desire.
+
+Every soul that dwells far from its source
+Seeks again the time of its reunion.</textarea>
+        </div>
+      </div>
+      <!-- AI Assist -->
+      <div class="ws-pane">
+        <div class="ws-pane-header">
+          <div class="ws-pane-label"><span class="lang-id">Bantuan AI</span><span class="lang-en">AI Assist</span></div>
+          <div style="font-size:0.62rem;padding:0.14rem 0.5rem;background:var(--bloom-gold-pale);border:1px solid var(--bloom-gold-light);border-radius:999px;color:#7a5a1a;font-weight:600">Active</div>
+        </div>
+        <div class="ws-pane-content">
+          <div class="ws-ai-msg">
+            <span class="lang-id">Saya telah menganalisis bagian ini. Berikut catatannya:</span>
+            <span class="lang-en">I've analyzed this passage. Here are my notes:</span>
+          </div>
+          <div class="ws-ai-suggest" onclick="insertSuggestion()">
+            <div class="ws-ai-suggest-label"><span class="lang-id">Saran Baris Pembuka</span><span class="lang-en">Suggested Opening Line</span></div>
+            <span class="lang-id">"Dengarlah seruling — keluhannya ia ungkapkan, kisah perpisahan ia bisikkan."</span>
+            <span class="lang-en">"Hear the reed — its complaint it utters, of separation's tale it murmurs."</span>
+            <div style="font-size:0.68rem;color:var(--bloom-muted);margin-top:0.45rem"><span class="lang-id">Klik untuk memasukkan ke terjemahan</span><span class="lang-en">Click to insert into translation</span></div>
+          </div>
+          <div style="margin-top:1rem;font-size:0.78rem;color:var(--bloom-ink);line-height:1.75">
+            <strong style="font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bloom-muted)"><span class="lang-id">Catatan Budaya</span><span class="lang-en">Cultural Note</span></strong><br>
+            <span class="lang-id">Kata <em>nāy</em> (نی) secara khusus merujuk pada seruling ujung yang ditiup vertikal dari bambu persisten (<em>hollow cane</em>). Pilihan instrumen ini disengaja — ia secara harfiah dipotong, menciptakan luka yang memungkinkan musik. Rumi menggunakan realitas fisik ini sebagai metafora spiritual.</span>
+            <span class="lang-en">The word <em>nāy</em> (نی) refers specifically to the Persian end-blown flute made from hollow cane. The instrument is intentionally chosen — it is literally cut, creating a wound that enables music. Rumi uses this physical reality as spiritual metaphor.</span>
+          </div>
+          <div style="margin-top:0.95rem;font-size:0.78rem;line-height:1.75;color:var(--bloom-ink)">
+            <strong style="font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--bloom-muted)">شکایت (shikāyat)</strong><br>
+            <span class="lang-id">Secara harfiah: keluhan, ratapan, keberatan. Namun dalam konteks Sufi menyiratkan bentuk kerinduan yang suci. Pertimbangkan: "ratapan" (Nicholson), "keluhan" (Arberry), atau "kisah" (Barks). Masing-masing mengubah register emosional.</span>
+            <span class="lang-en">Literally: complaint, lament, grievance. But in Sufi context implies a sacred form of longing. Consider: "lament" (Nicholson), "complaint" (Arberry), or "tale" (Barks). Each changes the emotional register.</span>
+          </div>
+          <div class="ws-ai-actions">
+            <button class="ws-ai-action">🔍 <span class="lang-id">Jelaskan kata atau frasa</span><span class="lang-en">Explain a word or phrase</span></button>
+            <button class="ws-ai-action">📚 <span class="lang-id">Tampilkan terjemahan paralel</span><span class="lang-en">Show parallel translations</span></button>
+            <button class="ws-ai-action">🌍 <span class="lang-id">Konteks budaya & historis</span><span class="lang-en">Cultural/historical context</span></button>
+            <button class="ws-ai-action">✓ <span class="lang-id">Periksa akurasi terjemahanku</span><span class="lang-en">Check my translation accuracy</span></button>
+            <button class="ws-ai-action">🔄 <span class="lang-id">Sarankan frasa alternatif</span><span class="lang-en">Suggest alternative phrasings</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE: FUNDING -->
+<!-- ============================================================ -->
+<div class="page" id="page-funding">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="page-tag"><span class="lang-id">Sistem Dana DAO</span><span class="lang-en">DAO Funding System</span></div>
+          <h1 class="page-h1"><span class="lang-id">Perbendaharaan & <em>Tata Kelola</em></span><span class="lang-en">Treasury & <em>Governance</em></span></h1>
+        </div>
+        <button class="donate-btn" onclick="alert(document.body.classList.contains(\'en\') ? \'Donation modal coming soon! Send ETH, USDC, or SPIRIT to the treasury.\' : \'Modal donasi segera hadir! Kirim ETH, USDC, atau SPIRIT ke perbendaharaan.\')"><span class="lang-id">Donasi ke Perbendaharaan ✦</span><span class="lang-en">Donate to Treasury ✦</span></button>
+      </div>
+    </div>
+    <div class="funding-grid">
+      <div class="treasury-card">
+        <div>
+          <div class="treasury-label"><span class="lang-id">Total Saldo Perbendaharaan</span><span class="lang-en">Total Treasury Balance</span></div>
+          <div class="treasury-amount">847.230 <span style="font-size:1.4rem;color:var(--bloom-gold)">SPIRIT</span></div>
+          <div class="treasury-usd">≈ $42.361 USD · <span class="lang-id">Diperbarui 2 menit lalu</span><span class="lang-en">Updated 2 min ago</span></div>
+          <div class="treasury-thresh">
+            <div class="treasury-thresh-label">
+              <span><span class="lang-id">Progres ke Ambang Pembukaan</span><span class="lang-en">Progress to Unlock Threshold</span></span>
+              <span>84,7%</span>
+            </div>
+            <div class="treasury-track"><div class="treasury-fill" style="width:84.7%"></div></div>
+            <div style="font-size:0.7rem;color:rgba(245,240,232,0.4);margin-top:0.3rem"><span class="lang-id">152.770 SPIRIT lagi untuk membuka pencairan penuh</span><span class="lang-en">152,770 SPIRIT remaining to unlock full disbursement</span></div>
+          </div>
+          <div class="treasury-status">
+            <div class="status-dot locked"></div>
+            <div>
+              <div class="status-text-main"><span class="lang-id">Perbendaharaan: Terkunci Sebagian</span><span class="lang-en">Treasury: Partially Locked</span></div>
+              <div class="status-text-sub"><span class="lang-id">Proposal kecil (≤10K SPIRIT) dapat dilanjutkan. Buka penuh pada 1 Juta SPIRIT.</span><span class="lang-en">Small proposals (≤10K SPIRIT) can proceed. Full unlock at 1M SPIRIT threshold.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="treasury-stats">
+          <div class="t-stat"><div class="t-stat-label"><span class="lang-id">Total Donasi</span><span class="lang-en">Total Donated</span></div><div class="t-stat-val">1,2 Juta SPIRIT</div></div>
+          <div class="t-stat"><div class="t-stat-label"><span class="lang-id">Dicairkan ke Proyek</span><span class="lang-en">Disbursed to Projects</span></div><div class="t-stat-val">352.770 SPIRIT</div></div>
+          <div class="t-stat"><div class="t-stat-label"><span class="lang-id">Proposal Aktif</span><span class="lang-en">Active Proposals</span></div><div class="t-stat-val">7</div></div>
+          <div class="t-stat"><div class="t-stat-label"><span class="lang-id">Anggota DAO Memilih</span><span class="lang-en">DAO Members Voting</span></div><div class="t-stat-val">1.847</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="proposals-header">
+          <h2 class="proposals-title"><span class="lang-id">Proposal Aktif</span><span class="lang-en">Active Proposals</span></h2>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button class="filter-btn active" style="font-size:0.72rem"><span class="lang-id">Semua</span><span class="lang-en">All</span></button>
+            <button class="filter-btn" style="font-size:0.72rem"><span class="lang-id">Aktif</span><span class="lang-en">Active</span></button>
+            <button class="filter-btn" style="font-size:0.72rem"><span class="lang-id">Tertunda</span><span class="lang-en">Pending</span></button>
+            <button class="filter-btn" style="font-size:0.72rem"><span class="lang-id">Lulus</span><span class="lang-en">Passed</span></button>
+            <button class="btn-primary" style="padding:0.32rem 0.85rem;font-size:0.7rem">+ <span class="lang-id">Proposal Baru</span><span class="lang-en">New Proposal</span></button>
+          </div>
+        </div>
+        <div class="proposal-list">
+          <div class="proposal-card">
+            <div class="proposal-header">
+              <div>
+                <div class="proposal-title"><span class="lang-id">Dana Proyek Terjemahan Penuh Masnavi</span><span class="lang-en">Fund Masnavi Full Translation Project</span></div>
+                <div class="proposal-meta">bloom.eth · <span class="lang-id">12 hari lalu · Butuh 50.000 SPIRIT</span><span class="lang-en">12 days ago · Requires 50,000 SPIRIT</span></div>
+              </div>
+              <div class="proposal-status ps-active"><span class="lang-id">Pemilihan Aktif</span><span class="lang-en">Active Vote</span></div>
+            </div>
+            <div class="proposal-desc"><span class="lang-id">Alokasikan 50.000 SPIRIT untuk mendanai tim 8 penerjemah menyelesaikan 6 buku Masnavi ke dalam bahasa Indonesia dan Inggris selama 6 bulan. Termasuk draf berbantuan AI + tinjauan editorial manusia.</span><span class="lang-en">Allocate 50,000 SPIRIT to fund a team of 8 translators to complete all 6 books of the Masnavi into Indonesian and English over 6 months. Includes AI-assisted draft + human editorial review.</span></div>
+            <div class="vote-track"><div class="vote-for" style="width:73%"></div><div class="vote-against" style="width:27%"></div></div>
+            <div class="vote-labels"><span><span class="lang-id">Setuju: 73% (1.347 suara)</span><span class="lang-en">For: 73% (1,347 votes)</span></span><span><span class="lang-id">Tolak: 27% (498 suara)</span><span class="lang-en">Against: 27% (498 votes)</span></span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem">
+              <div class="vote-actions">
+                <button class="vote-btn vote-for-btn"><span class="lang-id">Setuju</span><span class="lang-en">Vote For</span></button>
+                <button class="vote-btn vote-against-btn"><span class="lang-id">Tolak</span><span class="lang-en">Vote Against</span></button>
+              </div>
+              <div class="proposal-req req-locked">🔒 <span class="lang-id">Terkunci sebagian · Ambang 84,7%</span><span class="lang-en">Partially locked · Threshold 84.7%</span></div>
+            </div>
+          </div>
+          <div class="proposal-card">
+            <div class="proposal-header">
+              <div>
+                <div class="proposal-title"><span class="lang-id">Program Beasiswa Bloom — 100 Kursi Akademi Gratis</span><span class="lang-en">Bloom Scholarship Program — 100 Free Academy Seats</span></div>
+                <div class="proposal-meta">scholar.eth · <span class="lang-id">5 hari lalu · Butuh 8.000 SPIRIT</span><span class="lang-en">5 days ago · Requires 8,000 SPIRIT</span></div>
+              </div>
+              <div class="proposal-status ps-active"><span class="lang-id">Pemilihan Aktif</span><span class="lang-en">Active Vote</span></div>
+            </div>
+            <div class="proposal-desc"><span class="lang-id">Ciptakan 100 kursi beasiswa bagi pelajar dari daerah berpenghasilan rendah untuk mengakses semua kursus Akademi secara gratis selama 1 tahun, didanai oleh alokasi perbendaharaan.</span><span class="lang-en">Create 100 scholarship seats for learners from low-income regions to access all Academy courses free for 1 year, funded by treasury allocation.</span></div>
+            <div class="vote-track"><div class="vote-for" style="width:91%"></div><div class="vote-against" style="width:9%"></div></div>
+            <div class="vote-labels"><span><span class="lang-id">Setuju: 91% (1.682 suara)</span><span class="lang-en">For: 91% (1,682 votes)</span></span><span><span class="lang-id">Tolak: 9% (166 suara)</span><span class="lang-en">Against: 9% (166 votes)</span></span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem">
+              <div class="vote-actions">
+                <button class="vote-btn vote-for-btn"><span class="lang-id">Setuju</span><span class="lang-en">Vote For</span></button>
+                <button class="vote-btn vote-against-btn"><span class="lang-id">Tolak</span><span class="lang-en">Vote Against</span></button>
+              </div>
+              <div class="proposal-req req-unlocked">✓ <span class="lang-id">Terbuka — dalam batas proposal kecil</span><span class="lang-en">Unlocked — within small proposal limit</span></div>
+            </div>
+          </div>
+          <div class="proposal-card">
+            <div class="proposal-header">
+              <div>
+                <div class="proposal-title"><span class="lang-id">Peningkatan Tutor AI — Dukungan Multibahasa</span><span class="lang-en">AI Tutor Enhancement — Multilingual Support</span></div>
+                <div class="proposal-meta">dev.eth · <span class="lang-id">3 hari lalu · Butuh 25.000 SPIRIT</span><span class="lang-en">3 days ago · Requires 25,000 SPIRIT</span></div>
+              </div>
+              <div class="proposal-status ps-pending"><span class="lang-id">Tertunda</span><span class="lang-en">Pending</span></div>
+            </div>
+            <div class="proposal-desc"><span class="lang-id">Dana pengembangan dukungan Tutor AI untuk Bahasa Arab, Indonesia, Turki, dan Urdu — empat bahasa paling banyak diminta dari survei komunitas (Q3 2025).</span><span class="lang-en">Fund development of AI Tutor support for Arabic, Indonesian, Turkish, and Urdu — the four most-requested languages from the community survey (Q3 2025).</span></div>
+            <div class="vote-track"><div class="vote-for" style="width:56%"></div><div class="vote-against" style="width:44%"></div></div>
+            <div class="vote-labels"><span><span class="lang-id">Setuju: 56%</span><span class="lang-en">For: 56%</span></span><span><span class="lang-id">Tolak: 44%</span><span class="lang-en">Against: 44%</span></span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem">
+              <div class="vote-actions">
+                <button class="vote-btn vote-for-btn"><span class="lang-id">Setuju</span><span class="lang-en">Vote For</span></button>
+                <button class="vote-btn vote-against-btn"><span class="lang-id">Tolak</span><span class="lang-en">Vote Against</span></button>
+              </div>
+              <div class="proposal-req req-locked">🔒 <span class="lang-id">Pemilihan berakhir 4 hari lagi</span><span class="lang-en">Voting period ends in 4 days</span></div>
+            </div>
+          </div>
+          <div class="proposal-card" style="opacity:0.72">
+            <div class="proposal-header">
+              <div>
+                <div class="proposal-title"><span class="lang-id">Kemitraan Digitalisasi Naskah Sansekerta</span><span class="lang-en">Sanskrit Manuscript Digitization Partnership</span></div>
+                <div class="proposal-meta">archive.eth · <span class="lang-id">21 hari lalu · 30.000 SPIRIT dialokasikan</span><span class="lang-en">21 days ago · 30,000 SPIRIT allocated</span></div>
+              </div>
+              <div class="proposal-status ps-passed"><span class="lang-id">Lulus ✓</span><span class="lang-en">Passed ✓</span></div>
+            </div>
+            <div class="proposal-desc"><span class="lang-id">Kemitraan dengan Arsip Nasional India untuk mendigitalisasi 500+ naskah Sansekerta ke Perpustakaan Bloom. Dana ditransfer ke rekening escrow proyek.</span><span class="lang-en">Partnership with the National Archives of India to digitize 500+ Sanskrit manuscripts into the Bloom Library. Funding transferred to project escrow.</span></div>
+            <div class="vote-track"><div class="vote-for" style="width:88%"></div><div class="vote-against" style="width:12%"></div></div>
+            <div class="vote-labels"><span><span class="lang-id">Final: 88% Setuju · Lulus Hari 14</span><span class="lang-en">Final: 88% For · Passed on Day 14</span></span></div>
+            <div class="proposal-req req-unlocked" style="display:inline-flex">✓ <span class="lang-id">Didanai & Sedang Berjalan</span><span class="lang-en">Funded & In Progress</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== LANGUAGE SYSTEM =====
+function setLang(lang) {
+  document.body.classList.toggle('en', lang === 'en');
+  document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.documentElement.lang = lang;
+  // Switch textarea in workspace
+  const taId = document.getElementById('ws-textarea-id');
+  const taEn = document.getElementById('ws-textarea-en');
+  if (taId && taEn) {
+    taId.style.display = lang === 'id' ? 'block' : 'none';
+    taEn.style.display = lang === 'en' ? 'block' : 'none';
+  }
+  localStorage.setItem('bloom-lang', lang);
+}
+
+// ===== NAVIGATION =====
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const pg = document.getElementById('page-' + id);
+  if (pg) pg.classList.add('active');
+  window.scrollTo(0, 0);
+  const idxMap = {landing:0,academy:1,library:2,contribution:3,funding:4,dashboard:5,learn:1};
+  const links = document.querySelectorAll('.nav-link');
+  if (idxMap[id] !== undefined && links[idxMap[id]]) links[idxMap[id]].classList.add('active');
+}
+
+// ===== FILTER BUTTONS =====
+document.querySelectorAll('.filter-row').forEach(row => {
+  row.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      row.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+});
+document.querySelectorAll('.proposals-header').forEach(header => {
+  header.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      header.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+});
+
+// ===== AI TUTOR CHAT =====
+const botReplies = {
+  id: [
+    "Pertanyaan bagus tentang Masnavi. Dalam tradisi Sufi, konsep ini berkaitan dengan gagasan <em>mahabbah</em> (cinta ilahi) sebagai kekuatan pendorong seluruh ciptaan. Rumi melihat alam semesta itu sendiri merindukan kembali ke sumbernya.",
+    "Tradisi puisi Persia menggunakan bentuk <em>ghazal</em> dan <em>masnavi</em> secara berbeda — masnavi memungkinkan narasi panjang sementara ghazal menangkap momen mistis yang intens dan tunggal.",
+    "Konsep <em>wahdat al-wujud</em> (kesatuan wujud) Ibn Arabi secara langsung mempengaruhi bagaimana Rumi memahami pemisahan ini. Seluruh eksistensi adalah satu realitas yang mengalami dirinya sendiri melalui keberagaman.",
+  ],
+  en: [
+    "Great question about the Masnavi. In Sufi tradition, this concept relates to <em>mahabbah</em> (divine love) as the driving force of all creation. Rumi saw the universe itself as longing for return to its source.",
+    "The Persian poetic tradition uses <em>ghazal</em> and <em>masnavi</em> forms differently — the masnavi allows extended narrative while the ghazal captures intense single moments of mystical experience.",
+    "Ibn Arabi's concept of <em>wahdat al-wujud</em> (unity of being) directly influenced how Rumi understood this separation. All existence is one reality experiencing itself through diversity.",
+  ]
+};
+
+function sendAI() {
+  const input = document.getElementById('ai-input-field');
+  const msgs = document.getElementById('ai-msgs');
+  const text = input.value.trim();
+  if (!text) return;
+  const userMsg = document.createElement('div');
+  userMsg.className = 'ai-msg user';
+  userMsg.textContent = text;
+  msgs.appendChild(userMsg);
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    const botMsg = document.createElement('div');
+    botMsg.className = 'ai-msg bot';
+    const lang = document.body.classList.contains('en') ? 'en' : 'id';
+    const replies = botReplies[lang];
+    botMsg.innerHTML = replies[Math.floor(Math.random() * replies.length)];
+    msgs.appendChild(botMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 750);
+}
+
+function insertSuggestion() {
+  const lang = document.body.classList.contains('en') ? 'en' : 'id';
+  const ta = lang === 'id' ? document.getElementById('ws-textarea-id') : document.getElementById('ws-textarea-en');
+  const line = lang === 'id'
+    ? 'Dengarlah seruling — keluhannya ia ungkapkan, kisah perpisahan ia bisikkan.\n\n'
+    : 'Hear the reed — its complaint it utters, of separation\'s tale it murmurs.\n\n';
+  ta.value = line + ta.value;
+  ta.focus();
+}
+
+// ===== INIT =====
+// Restore saved language or default to ID
+const savedLang = localStorage.getItem('bloom-lang') || 'id';
+setLang(savedLang);
+document.querySelectorAll('.nav-link')[0].classList.add('active');
+</script>
+</body>
+</html>
